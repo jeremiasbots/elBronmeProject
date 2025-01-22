@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 	"sync"
@@ -22,11 +21,8 @@ func main() {
 	go func(wg *sync.WaitGroup) {
 		defer wg.Done()
 		fs := http.FileServer(http.Dir("./public"))
-		http.Handle("/public/", http.StripPrefix("/public/", fs))
+		http.Handle("/", http.StripPrefix("/", fs))
 	}(wg)
 	wg.Wait()
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(w, string(file))
-	})
 	http.ListenAndServe(":8080", nil)
 }
